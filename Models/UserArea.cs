@@ -2,7 +2,7 @@
 {
 	public class UserArea
 	{
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 		public int AreaId { get; set; }
 		public User User { get; set; }
 		public Area Area { get; set; }

@@ -1,9 +1,11 @@
 ﻿using A_GroTech_Api.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace A_GroTech_Api.Data
 {
-	public class DataContext : DbContext
+	public class DataContext : IdentityDbContext<IdentityUser>
 	{
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -25,11 +27,12 @@ namespace A_GroTech_Api.Data
 		public DbSet<Prediction> Predictions { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
-        public DbSet<User> Users { get; set; }
+        /*public DbSet<User> Users { get; set; }*/
         public DbSet<UserArea> UserAreas { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+            base.OnModelCreating(modelBuilder);
 			modelBuilder.Entity<UserArea>()
                 .HasKey(ua => new { ua.UserId, ua.AreaId });
             modelBuilder.Entity<UserArea>()
