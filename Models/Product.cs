@@ -16,6 +16,7 @@
         public DateTime UpdatedAt { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<ProductImage> ProductImages { get; set; }
+        public ICollection<ProductReview> ProductReviews { get; set; }
 
 	}
 }
