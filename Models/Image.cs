@@ -10,5 +10,6 @@
 		public ICollection<DiscussionImage> DiscussionImages { get; set; }
         public ICollection<DiscussionAnswerImage> DiscussionAnswerImages { get; set; }
         public ICollection<ProductImage> ProductImages { get; set; }
+        public ICollection<ProductReviewImage> ProductReviewImages { get; set; }
     }
 }
