@@ -27,6 +27,8 @@ namespace A_GroTech_Api.Data
 		public DbSet<Prediction> Predictions { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<ProductReview> ProductReviews { get; set; }
+        public DbSet<ProductReviewImage> ProductReviewImages { get; set; }
         /*public DbSet<User> Users { get; set; }*/
         public DbSet<UserArea> UserAreas { get; set; }
 
@@ -99,6 +101,17 @@ namespace A_GroTech_Api.Data
 				.WithMany(i => i.ProductImages)
 				.HasForeignKey(pi => pi.ImageId);
 
+            modelBuilder.Entity<ProductReviewImage>()
+				.HasKey(pri => new { pri.ProductReviewId, pri.ImageId });
+            modelBuilder.Entity<ProductReviewImage>()
+				.HasOne(pri => pri.ProductReview)
+				.WithMany(pr => pr.ProductReviewImages)
+				.HasForeignKey(pri => pri.ProductReviewId);
+            modelBuilder.Entity<ProductReviewImage>()
+				.HasOne(pri => pri.Image)
+				.WithMany(i => i.ProductReviewImages)
+				.HasForeignKey(pri => pri.ImageId);
+
             modelBuilder.Entity<PinnedDiscussionAnswer>()
 				.HasKey(pda => new { pda.DiscussionId, pda.DiscussionAnswerId });
             modelBuilder.Entity<PinnedDiscussionAnswer>()
@@ -114,6 +127,11 @@ namespace A_GroTech_Api.Data
             modelBuilder.Entity<DiscussionAnswer>()
                 .HasOne(da => da.Discussion)
                 .WithMany(d => d.DiscussionAnswers)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ProductReview>()
+                .HasOne(pr => pr.Product)
+                .WithMany(p => p.ProductReviews)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Order>()
