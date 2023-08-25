@@ -15,10 +15,10 @@ namespace A_GroTech_Api
 			_context = context;
 			_userManager = userManager;
 		}
-		/* * * * * * Login Data * * * * * *
-		 * Email	: user@example.com	  *
-		 * Password	: walangkecek123	  *
-		 * * * * * * * * * * * * * * * * * */ 
+		/* * * * * *  Login Data * * * * * *
+		 * Email	: usertes1@example.com *
+		 * Password	: walangkecek123	   *
+		 * * * * * * * * * * * * * * * * * */
 		public async Task SeedDataContextAsync()
 		{
 			/*if (_context.Users.Any())
@@ -145,18 +145,10 @@ namespace A_GroTech_Api
 				var image2 = await _context.Images.Where(i => i.Path == "https://fastly.picsum.photos/id/9/5000/3269.jpg?hmac=cZKbaLeduq7rNB8X-bigYO8bvPIWtT-mh8GRXtU3vPc").FirstOrDefaultAsync();
 				var image3 = await _context.Images.Where(i => i.Path == "https://fastly.picsum.photos/id/7/4728/3168.jpg?hmac=c5B5tfYFM9blHHMhuu4UKmhnbZoJqrzNOP9xjkV4w3o").FirstOrDefaultAsync();
 				var image4 = await _context.Images.Where(i => i.Path == "https://fastly.picsum.photos/id/28/4928/3264.jpg?hmac=GnYF-RnBUg44PFfU5pcw_Qs0ReOyStdnZ8MtQWJqTfA").FirstOrDefaultAsync();
-				/*var image2 = await _context.Images.FindAsync("https://fastly.picsum.photos/id/9/5000/3269.jpg?hmac=cZKbaLeduq7rNB8X-bigYO8bvPIWtT-mh8GRXtU3vPc");
-				var image3 = await _context.Images.FindAsync("https://fastly.picsum.photos/id/7/4728/3168.jpg?hmac=c5B5tfYFM9blHHMhuu4UKmhnbZoJqrzNOP9xjkV4w3o");
-				var image4 = await _context.Images.FindAsync("https://fastly.picsum.photos/id/28/4928/3264.jpg?hmac=GnYF-RnBUg44PFfU5pcw_Qs0ReOyStdnZ8MtQWJqTfA");*/
 				var area1 = await _context.Areas.Where(a => a.Kecamatan == "Cimahi Selatan").FirstOrDefaultAsync();
 				var area2 = await _context.Areas.Where(a => a.Kecamatan == "Cimahi Utara").FirstOrDefaultAsync();
 				var area3 = await _context.Areas.Where(a => a.Kecamatan == "Cimahi Tengah").FirstOrDefaultAsync();
-
-				/*var area1 = await _context.Areas.FindAsync("Cimahi Selatan");
-				var area2 = await _context.Areas.FindAsync("Cimahi Utara");
-				var area3 = await _context.Areas.FindAsync("Cimahi Tengah");*/
 				var commodityType1 = await _context.CommodityTypes.Where(c => c.Name == "Sayur").FirstOrDefaultAsync();
-				/*var commodityType1 = await _context.CommodityTypes.FindAsync("Sayur");*/
 
 				var userArea = new List<UserArea>(){
 					new UserArea
@@ -180,6 +172,7 @@ namespace A_GroTech_Api
 				}
 				var discussion = new Discussion
 				{
+					Tittle = "Sistem Irigasi yang Efisien",
 					Message = "Rina adalah seorang petani yang memiliki lahan pertanian di daerah yang cenderung kering. Setelah musim tanam terakhir yang kurang sukses akibat kurangnya air, ia ingin mencari solusi irigasi yang efisien untuk pertanaman berikutnya. Bagaimana Anda akan memberi saran pada Rina mengenai pilihan sistem irigasi yang sesuai?",
 					Likes = 1,
 					User = user1,
