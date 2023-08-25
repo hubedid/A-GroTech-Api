@@ -3,7 +3,8 @@
 	public class Discussion
 	{
         public int Id { get; set; }
-        public string Message { get; set; }
+		public string Tittle { get; set; }
+		public string Message { get; set; }
         public int Likes { get; set; }
         public User User { get; set; }
         public bool IsSolved { get; set; }
