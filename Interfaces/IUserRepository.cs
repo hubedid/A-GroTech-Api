@@ -5,5 +5,6 @@ namespace A_GroTech_Api.Interfaces
 	public interface IUserRepository
 	{
 		ICollection<User> GetUsers();
+		User GetUser(string id);
 	}
 }
