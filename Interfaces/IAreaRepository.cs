@@ -6,5 +6,9 @@ namespace A_GroTech_Api.Interfaces
 	{
 		ICollection<Area> GetAreas();
 		Area GetArea(int id);
+		bool AddArea(Area area);
+		bool UpdateArea(Area area);
+		bool DeleteArea(int id);
+		bool Save();
 	}
 }

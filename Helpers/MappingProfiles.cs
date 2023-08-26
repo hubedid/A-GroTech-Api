@@ -20,6 +20,7 @@ namespace A_GroTech_Api.Helpers
 			CreateMap<DiscussionAnswerPostDto, DiscussionAnswer>();
 			CreateMap<DiscussionAnswerPutDto, DiscussionAnswer>();
 			CreateMap<Area, AreaDto>();
+            CreateMap<AreaPostDto, Area>();
             CreateMap<Image, ImageDto>();
 			CreateMap<ImagePostDto, Image>();
         }
