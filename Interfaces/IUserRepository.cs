@@ -6,5 +6,9 @@ namespace A_GroTech_Api.Interfaces
 	{
 		ICollection<User> GetUsers();
 		User GetUser(string id);
+		ICollection<Notification> GetNotificationsByUser(string userId);
+		ICollection<Area> GetAreasByUser(string userId);
+		ICollection<Product> GetProductsByUser(string userId);
+		ICollection<Order> GetOrdersByUser(string userId);
 	}
 }
