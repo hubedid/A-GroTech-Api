@@ -151,6 +151,52 @@ namespace A_GroTech_Api.Controllers
 			}
 		}
 
+		[HttpPatch("{discussionId}/pinned-answer")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(400, Type = typeof(ApiResponse))]
+		public IActionResult AddPinnedAnswerToDiscussion(int discussionId, [Required][FromQuery] int answerId)
+		{
+			try
+			{
+				if (!_discussionRepository.AddPinnedAnswer(discussionId, answerId))
+				{
+					throw new Exception("Adding pinned answer to discussion failed on save.");
+				}
+				return Ok(_responseHelper.Success("Pinned answer added to discussion successfully"));
+			}
+			catch (SqlException ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong", 500, ex.Message));
+			}
+		}
+
+		[HttpDelete("{discussionId}/pinned-answer")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(400, Type = typeof(ApiResponse))]
+		public IActionResult RemovePinnedAnswerFromDiscussion(int discussionId, [Required][FromQuery] int answerId)
+		{
+			try
+			{
+				if (!_discussionRepository.RemovePinnedAnswer(discussionId, answerId))
+				{
+					throw new Exception("Removing pinned answer from discussion failed on save.");
+				}
+				return Ok(_responseHelper.Success("Pinned answer removed from discussion successfully"));
+			}
+			catch (SqlException ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong", 500, ex.Message));
+			}
+		}
+
 		[HttpGet("{discussionId}/images")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<ImageDto>))]
 		public IActionResult GetDiscussionImagesByDiscussionId(int discussionId)
@@ -286,6 +332,30 @@ namespace A_GroTech_Api.Controllers
 			}
 		}
 
+		[HttpDelete("{discussionId}")]
+		[ProducesResponseType(200, Type = typeof(ApiResponse))]
+		[ProducesResponseType(400)]
+		public IActionResult DeleteDiscussion(int discussionId)
+		{
+			try
+			{
+				if (!ModelState.IsValid)
+					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
+				if (!_discussionRepository.DeleteDiscussion(discussionId))
+					throw new Exception("Something went wrong in deleting Discussion");
+				return Ok(_responseHelper.Success("Discussion deleted successfully"));
+			}
+			catch (SqlException ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong", 500, ex.Message));
+			}
+		}
+
+
 		[HttpPatch("{discussionId}/like")]
 		[ProducesResponseType(204)]
 		[ProducesResponseType(400, Type = typeof(ApiResponse))]
@@ -365,52 +435,6 @@ namespace A_GroTech_Api.Controllers
 					throw new Exception("Removing solved from discussion failed on save.");
 				}
 				return Ok(_responseHelper.Success("Solved removed from discussion successfully"));
-			}
-			catch (SqlException ex)
-			{
-				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, _responseHelper.Error("Something went wrong", 500, ex.Message));
-			}
-		}
-
-		[HttpPatch("{discussionId}/pinned-answer")]
-		[ProducesResponseType(204)]
-		[ProducesResponseType(400, Type = typeof(ApiResponse))]
-		public IActionResult AddPinnedAnswerToDiscussion(int discussionId, [Required][FromQuery] int answerId)
-		{
-			try
-			{
-				if (!_discussionRepository.AddPinnedAnswer(discussionId, answerId))
-				{
-					throw new Exception("Adding pinned answer to discussion failed on save.");
-				}
-				return Ok(_responseHelper.Success("Pinned answer added to discussion successfully"));
-			}
-			catch (SqlException ex)
-			{
-				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, _responseHelper.Error("Something went wrong", 500, ex.Message));
-			}
-		}
-
-		[HttpDelete("{discussionId}/pinned-answer")]
-		[ProducesResponseType(204)]
-		[ProducesResponseType(400, Type = typeof(ApiResponse))]
-		public IActionResult RemovePinnedAnswerFromDiscussion(int discussionId, [Required][FromQuery] int answerId)
-		{
-			try
-			{
-				if (!_discussionRepository.RemovePinnedAnswer(discussionId, answerId))
-				{
-					throw new Exception("Removing pinned answer from discussion failed on save.");
-				}
-				return Ok(_responseHelper.Success("Pinned answer removed from discussion successfully"));
 			}
 			catch (SqlException ex)
 			{

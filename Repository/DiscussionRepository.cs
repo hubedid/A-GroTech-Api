@@ -72,7 +72,8 @@ namespace A_GroTech_Api.Repository
 		public bool DeleteDiscussion(int id)
 		{
 			var discussion = _context.Discussions.Where(d => d.Id == id).FirstOrDefault();
-			throw new NotImplementedException();
+			_context.Remove(discussion);
+			return Save();
 		}
 
 		public Discussion GetDiscussion(int id)
