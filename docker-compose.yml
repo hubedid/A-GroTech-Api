@@ -1,0 +1,46 @@
+version: '3.4'
+
+networks:
+  agrotech-network:
+    driver: bridge
+
+services:
+  agrotech-db:
+    container_name: api-db
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 8011:1433
+    environment: 
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_PASSWORD}
+      - MSSQL_PID=Express
+    restart: always
+    volumes:
+      - app-db-volume:/var/opt/mssql
+    networks:
+      - agrotech-network
+
+  a-grotech-api:
+    container_name: api-app
+    image: ${DOCKER_REGISTRY-}agrotechapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - 8010:80
+    depends_on:
+      - agrotech-db
+    environment:
+      - ConnectionStrings__DefaultConnection=${KONEKSI_DB}
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+    volumes:
+      - app-api-volume:/root/.aspnet/DataProtection-Keys
+    networks:
+      - agrotech-network
+
+volumes:
+  app-api-volume:
+  app-db-volume:
+
