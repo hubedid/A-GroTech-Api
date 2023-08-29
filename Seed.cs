@@ -9,20 +9,47 @@ namespace A_GroTech_Api
 	{
 		private readonly DataContext _context;
 		private readonly UserManager<User> _userManager;
+		private readonly RoleManager<IdentityRole> _roleManager;
 
-		public Seed(DataContext context, UserManager<User> userManager)
+		public Seed(DataContext context, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
 			_context = context;
 			_userManager = userManager;
+			_roleManager = roleManager;
 		}
 		/* * * * * *  Login Data * * * * * *
+		 * Admin						   *
+		 * Email	: admin@admin.com	   *
+		 * Password	: antihoaks123		   *
+		 *								   *
+		 * User							   *
 		 * Email	: usertes1@example.com *
 		 * Password	: walangkecek123	   *
 		 * * * * * * * * * * * * * * * * * */
 		public async Task SeedDataContextAsync()
 		{
-			/*if (_context.Users.Any())
-			{*/
+			if (!await _roleManager.RoleExistsAsync("Admin"))
+			{
+				await _roleManager.CreateAsync(new IdentityRole("Admin"));
+				await _roleManager.CreateAsync(new IdentityRole("User"));
+
+				var admin = new User
+				{
+					Name = "Admin",
+					UserName = "admin",
+					Email = "admin@admin.com"
+				};
+				var addAdmin = await _userManager.CreateAsync(admin, "antihoaks123");
+				if (addAdmin.Succeeded)
+				{
+					await _userManager.AddToRoleAsync(admin, "Admin");
+					Console.WriteLine($"User {admin.UserName} created successfully.");
+				}
+				else
+				{
+					Console.WriteLine($"User {admin.UserName} failed to create.");
+				}
+
 				var userNew = new List<User>()
 				{
 					new User
@@ -40,17 +67,15 @@ namespace A_GroTech_Api
 				};
 				foreach(var users in userNew)
 				{
-					var result = await _userManager.CreateAsync(users, "walangkecek123");
-					if (result.Succeeded)
+					try
 					{
+						await _userManager.CreateAsync(users, "walangkecek123");
+						await _userManager.AddToRoleAsync(users, "User");
 						Console.WriteLine($"User {users.UserName} created successfully.");
-					}
-					else
+					} 
+					catch (Exception e)
 					{
-						foreach (var error in result.Errors)
-						{
-							Console.WriteLine($"Error creating user {users.UserName}: {error.Description}");
-						}
+						Console.WriteLine(e.Message);
 					}
 				}
 
@@ -289,8 +314,8 @@ namespace A_GroTech_Api
 				if (productSave > 0)
 					Console.WriteLine("Product seeding successfully");
 
-			var productImage = new ProductImage
-			{
+				var productImage = new ProductImage
+				{
 					Product = _context.Products.Where(p => p.Name == "Kangkung").FirstOrDefault(),
 					Image = image4
 				};
@@ -313,6 +338,15 @@ namespace A_GroTech_Api
 				var orderSave = await _context.SaveChangesAsync();
 				if (orderSave > 0)
 					Console.WriteLine("Order seeding successfully");
+
+				var productReview = new ProductReview
+				{
+					Product = _context.Products.Where(p => p.Name == "Kangkung").FirstOrDefault(),
+					ReviewedBy = user2,
+					Message = "Bagus mas sayurnya fresh mantappp",
+					CreatedAt = DateTime.Now,
+					UpdatedAt = DateTime.Now,
+				};
 				
 				var predictionNew = new List<Prediction>()
 				{
@@ -351,11 +385,12 @@ namespace A_GroTech_Api
 					if (predictionSave > 0)
 						Console.WriteLine("Prediction seeding successfully");
 				}
-			/*}
+				Console.WriteLine("Seeding successfully");
+			}
 			else
 			{
 				Console.WriteLine("Already seeded");
-			}*/
+			}
 		}
     }
 }
