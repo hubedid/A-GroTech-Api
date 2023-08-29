@@ -3,13 +3,16 @@ using A_GroTech_Api.Dto.BodyModels;
 using A_GroTech_Api.Helpers;
 using A_GroTech_Api.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace A_GroTech_Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles = "Admin, User")]
 	public class ImageController : Controller
 	{
 		private readonly IMapper _mapper;

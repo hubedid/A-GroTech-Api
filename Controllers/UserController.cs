@@ -2,7 +2,6 @@
 using A_GroTech_Api.Helpers;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
-using A_GroTech_Api.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +11,7 @@ namespace A_GroTech_Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles = "Admin, User")]
 	public class UserController : Controller
 	{
 		private readonly ResponseHelper _responseHelper;
@@ -33,7 +33,7 @@ namespace A_GroTech_Api.Controllers
 		}
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
-		/*[Authorize]*/
+		[Authorize(Roles = "Admin")]
 		public IActionResult GetUsers()
 		{
 			try

@@ -4,6 +4,7 @@ using A_GroTech_Api.Helpers;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -11,6 +12,7 @@ namespace A_GroTech_Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles = "Admin, User")]
 	public class AreaController : Controller
 	{
 		private readonly ResponseHelper _responseHelper;

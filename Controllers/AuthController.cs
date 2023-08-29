@@ -81,6 +81,7 @@ namespace A_GroTech_Api.Controllers
 				if (!result)
 					return BadRequest(_responseHelper.Error("Invalid password"));
 
+				var roles = await _userManager.GetRolesAsync(user);
 				var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 				var tokenKey = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
 				var tokenExpires = DateTime.Now.AddMinutes(30);
@@ -93,6 +94,7 @@ namespace A_GroTech_Api.Controllers
 						new Claim(ClaimTypes.NameIdentifier, user.Id),
 						new Claim(ClaimTypes.Name, user.Name),
 						new Claim(ClaimTypes.Email, loginModel.Email),
+						new Claim(ClaimTypes.Role, roles.FirstOrDefault())
 					}),
 					Expires = tokenExpires,
 					SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)

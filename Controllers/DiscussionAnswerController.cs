@@ -4,15 +4,17 @@ using A_GroTech_Api.Helpers;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
 using AutoMapper;
-using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 
 namespace A_GroTech_Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles = "Admin, User")]
 	public class DiscussionAnswerController : Controller
 	{
 		private readonly ResponseHelper _responseHelper;

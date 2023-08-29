@@ -4,13 +4,16 @@ using A_GroTech_Api.Helpers;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace A_GroTech_Api.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
+	[Authorize(Roles = "Admin, User")]
 	public class PredictionController : Controller
 	{
 		private readonly IMapper _mapper;
@@ -83,6 +86,7 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpPost]
 		[ProducesResponseType(204)]
+		[Authorize(Roles = "Admin")]
 		public IActionResult CreatePrediction([FromBody] PredictionPostDto predictionPostDto)
 		{
 			try
@@ -118,6 +122,7 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpPut("{predictionId}")]
 		[ProducesResponseType(204)]
+		[Authorize(Roles = "Admin")]
 		public IActionResult UpdatePrediction(int predictionId, [FromBody] PredictionPostDto predictionPostDto)
 		{
 			try
@@ -135,6 +140,27 @@ namespace A_GroTech_Api.Controllers
 					throw new Exception("Failed to update prediction");
 
 				return Ok(_responseHelper.Success("Prediction updated successfully"));
+			}catch (SqlException ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong", 500, ex.Message));
+			}
+		}
+
+		[HttpDelete("{predictionId}")]
+		[ProducesResponseType(204)]
+		[Authorize(Roles = "Admin")]
+		public IActionResult DeletePrediction(int predictionId)
+		{
+			try
+			{
+				if (!_predictionRepository.DeletePrediction(predictionId))
+					throw new Exception("Failed to delete prediction");
+
+				return Ok(_responseHelper.Success("Prediction deleted successfully"));
 			}catch (SqlException ex)
 			{
 				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));

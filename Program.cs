@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Net;
@@ -108,7 +109,20 @@ builder.Services.AddAuthentication(auth =>
 				context.HandleResponse();
 				context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 				context.Response.ContentType = "application/json";
-				var result = new UnauthorizedObjectResult(new ResponseHelper().Error("You are not authorized"));
+				var result = new UnauthorizedObjectResult(new ResponseHelper().Error("You are not authorized", 401));
+				await result.ExecuteResultAsync(new ActionContext
+				{
+					HttpContext = context.HttpContext
+				});
+			},
+			OnForbidden = async context =>
+			{
+				context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+				context.Response.ContentType = "application/json";
+				var result = new ObjectResult(new ResponseHelper().Error("You are forbidden to access this resource", 403))
+				{
+					StatusCode = (int)HttpStatusCode.Forbidden
+				};
 				await result.ExecuteResultAsync(new ActionContext
 				{
 					HttpContext = context.HttpContext
@@ -143,53 +157,7 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 app.UseAuthentication();
-/*app.UseExceptionHandler(errorApp =>
-{
-	errorApp.Run(async context =>
-	{
-		context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-		context.Response.ContentType = "application/json";
 
-		var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-		var errorMessage = exceptionHandlerPathFeature?.Error.Message;
-
-		// Cek apakah status code adalah 401 Unauthorized
-		if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
-		{
-			var unauthorizedResponse = new
-			{
-				Message = "You are not authorized to access this resource."
-			};
-
-			var responseBody = JsonSerializer.Serialize(unauthorizedResponse);
-			await context.Response.WriteAsync(responseBody);
-		}
-		else
-		{
-			var responseMessage = new
-			{
-				Message = "An error occurred while processing your request.",
-				Error = errorMessage
-			};
-
-			var responseBody = JsonSerializer.Serialize(responseMessage);
-			await context.Response.WriteAsync(responseBody);
-		}
-	});
-});*/
-/*app.Use(async (context, next) =>
-{
-	await next();
-	if (context.Response.StatusCode == 404)
-	{
-		context.Response.ContentType = "application/json";
-		var result = new NotFoundObjectResult(new ResponseHelper().Error("Not Found", 404));
-		await result.ExecuteResultAsync(new ActionContext
-		{
-			HttpContext = context.Response.HttpContext
-		});
-	}
-});*/
 app.UseAuthorization();
 
 app.MapControllers();
