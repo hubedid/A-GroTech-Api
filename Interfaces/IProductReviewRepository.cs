@@ -1,11 +1,12 @@
-﻿using A_GroTech_Api.Dto.BodyModels;
+﻿using A_GroTech_Api.Dto;
+using A_GroTech_Api.Dto.BodyModels;
 using A_GroTech_Api.Models;
 
 namespace A_GroTech_Api.Interfaces
 {
 	public interface IProductReviewRepository
 	{
-		ICollection<ProductReview> GetProductReviews();
+		ICollection<ProductReview> GetProductReviews(PaginationDto paginationDto);
 		ProductReview GetProductReview(int id);
 		bool AddProductReview(ProductReview productReview);
 		bool UpdateProductReview(ProductReview productReview);

@@ -1,4 +1,5 @@
 ﻿using A_GroTech_Api.Data;
+using A_GroTech_Api.Dto;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
 
@@ -31,9 +32,12 @@ namespace A_GroTech_Api.Repository
 			return commodityType;
 		}
 
-		public ICollection<CommodityType> GetCommodityTypes()
+		public ICollection<CommodityType> GetCommodityTypes(PaginationDto paginationDto)
 		{
-			var commodityTypes = _context.CommodityTypes.ToList();
+			var commodityTypes = _context.CommodityTypes
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
+				.ToList();
 			return commodityTypes;
 		}
 

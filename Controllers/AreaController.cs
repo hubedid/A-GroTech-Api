@@ -18,6 +18,20 @@ namespace A_GroTech_Api.Controllers
 		private readonly ResponseHelper _responseHelper;
 		private readonly IAreaRepository _areaRepository;
 		private readonly IMapper _mapper;
+		const int maxPageSize = 50;
+		public int PageNumber { get; set; } = 1;
+		private int _pageSize = 10;
+		public int PageSize
+		{
+			get
+			{
+				return _pageSize;
+			}
+			set
+			{
+				_pageSize = (value > maxPageSize) ? maxPageSize : value;
+			}
+		}
 
 		public AreaController(ResponseHelper responseHelper, IAreaRepository areaRepository, IMapper mapper)
 		{
@@ -28,11 +42,12 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<AreaDto>))]
-		public IActionResult GetAreas()
+		public IActionResult GetAreas([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var areas = _mapper.Map<List<AreaDto>>(_areaRepository.GetAreas());
+
+				var areas = _mapper.Map<List<AreaDto>>(_areaRepository.GetAreas(paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (areas.Any() != true)

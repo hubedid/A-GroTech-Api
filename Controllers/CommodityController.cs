@@ -34,11 +34,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<CommodityDto>))]
-		public IActionResult GetCommodities()
+		public IActionResult GetCommodities([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var commodities = _mapper.Map<List<CommodityDto>>(_commodityRepository.GetCommodities());
+				var commodities = _mapper.Map<List<CommodityDto>>(_commodityRepository.GetCommodities(paginationDto));
 
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
@@ -59,11 +59,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet("{commodityId}/areas")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<AreaDto>))]
-		public IActionResult GetCommodityAreas(int commodityId)
+		public IActionResult GetCommodityAreas(int commodityId, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var commodityAreas = _mapper.Map<List<AreaDto>>(_commodityRepository.GetCommodityAreas(commodityId));
+				var commodityAreas = _mapper.Map<List<AreaDto>>(_commodityRepository.GetCommodityAreas(commodityId, paginationDto));
 
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));

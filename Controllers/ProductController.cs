@@ -41,11 +41,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<ProductDto>))]
-		public IActionResult GetProducts()
+		public IActionResult GetProducts([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var products = _mapper.Map<List<ProductDto>>(_productRepository.GetProducts());
+				var products = _mapper.Map<List<ProductDto>>(_productRepository.GetProducts(paginationDto));
 
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
@@ -192,11 +192,11 @@ namespace A_GroTech_Api.Controllers
 		[ProducesResponseType(200, Type = typeof(IEnumerable<ProductReviewDto>))]
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
-		public IActionResult GetProductReviews(int productId)
+		public IActionResult GetProductReviews(int productId, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var productReviews = _productRepository.GetProductReviews(productId);
+				var productReviews = _productRepository.GetProductReviews(productId, paginationDto);
 				var productReviewsMap = _mapper.Map<List<ProductReviewDto>>(productReviews);
 
 				if (!ModelState.IsValid)
@@ -221,11 +221,11 @@ namespace A_GroTech_Api.Controllers
 		[ProducesResponseType(200, Type = typeof(IEnumerable<ProductDto>))]
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
-		public IActionResult SearchProducts([FromQuery] string search)
+		public IActionResult SearchProducts([FromQuery] string search, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var result = _productRepository.SearchProduct(search);
+				var result = _productRepository.SearchProduct(search, paginationDto);
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				

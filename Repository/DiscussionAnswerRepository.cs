@@ -1,4 +1,5 @@
 ﻿using A_GroTech_Api.Data;
+using A_GroTech_Api.Dto;
 using A_GroTech_Api.Dto.BodyModels;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
@@ -76,21 +77,25 @@ namespace A_GroTech_Api.Repository
 			return _mapper.Map<ICollection<Image>>(discussionImage);
 		}
 
-		public ICollection<DiscussionAnswer> GetDiscussionAnswers()
+		public ICollection<DiscussionAnswer> GetDiscussionAnswers(PaginationDto paginationDto)
 		{
 			var discussionAnswers = _context.DiscussionAnswers
 				.Include(da => da.AnsweredBy)
 				.Include(da => da.Discussion)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
 				.ToList();
 			return _mapper.Map<ICollection<DiscussionAnswer>>(discussionAnswers);
 		}
 
-		public ICollection<DiscussionAnswer> GetDiscussionAnswersByDiscussionId(int id)
+		public ICollection<DiscussionAnswer> GetDiscussionAnswersByDiscussionId(int id, PaginationDto paginationDto)
 		{
 			var discussionAnswers = _context.DiscussionAnswers
 				.Where(da => da.Discussion.Id == id)
 				.Include(da => da.AnsweredBy)
 				.Include(da => da.Discussion)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
 				.ToList();
 			return _mapper.Map<ICollection<DiscussionAnswer>>(discussionAnswers);
 		}

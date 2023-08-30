@@ -1,4 +1,5 @@
 ﻿using A_GroTech_Api.Data;
+using A_GroTech_Api.Dto;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -32,9 +33,12 @@ namespace A_GroTech_Api.Repository
 			return _context.Areas.Where(a => a.Id == id).FirstOrDefault();
 		}
 
-		public ICollection<Area> GetAreas()
+		public ICollection<Area> GetAreas(PaginationDto paginationDto)
 		{
-			return _context.Areas.ToList();
+			return _context.Areas
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
+				.ToList();
 		}
 
 		public bool Save()

@@ -31,10 +31,10 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<CommodityTypeDto>))]
-		public IActionResult GetCommodityTypes()
+		public IActionResult GetCommodityTypes([FromQuery] PaginationDto paginationDto)
 		{
 			try { 				
-				var commodityTypes = _mapper.Map<List<CommodityTypeDto>>(_commodityTypeRepository.GetCommodityTypes());
+				var commodityTypes = _mapper.Map<List<CommodityTypeDto>>(_commodityTypeRepository.GetCommodityTypes(paginationDto));
 			
 				if (!ModelState.IsValid)
 							return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));

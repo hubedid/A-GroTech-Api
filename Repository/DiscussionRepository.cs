@@ -1,4 +1,5 @@
 ﻿using A_GroTech_Api.Data;
+using A_GroTech_Api.Dto;
 using A_GroTech_Api.Dto.BodyModels;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
@@ -95,15 +96,23 @@ namespace A_GroTech_Api.Repository
 			return _mapper.Map<ICollection<Image>>(discussionImage);
 		}
 
-		public ICollection<Discussion> GetDiscussions()
+		public ICollection<Discussion> GetDiscussions(PaginationDto paginationDto)
 		{
-			var discussions = _context.Discussions.Include(d => d.User).ToList();
+			var discussions = _context.Discussions
+				.Include(d => d.User)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
+				.ToList();
 			return _mapper.Map<ICollection<Discussion>>(discussions);
 		}
 
-		public ICollection<Discussion> GetDiscussionsByUserWhoCreated(string id)
+		public ICollection<Discussion> GetDiscussionsByUserWhoCreated(string id, PaginationDto paginationDto)
 		{
-			var discussions = _context.Discussions.Where(d => d.User.Id == id).ToList();
+			var discussions = _context.Discussions
+				.Where(d => d.User.Id == id)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
+				.ToList();
 			return _mapper.Map<ICollection<Discussion>>(discussions);
 		}
 
@@ -158,11 +167,13 @@ namespace A_GroTech_Api.Repository
 			return saved > 0 ? true : false;
 		}
 
-		public ICollection<Discussion> SearchDiscussions(string search)
+		public ICollection<Discussion> SearchDiscussions(string search, PaginationDto paginationDto)
 		{
 			var discussions = _context.Discussions
 				.Where(d => d.Tittle.Contains(search) || d.Message.Contains(search))
 				.Include(d => d.User)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
 				.ToList();
 			return _mapper.Map<ICollection<Discussion>>(discussions);
 		}

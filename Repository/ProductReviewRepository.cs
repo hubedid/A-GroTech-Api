@@ -1,4 +1,5 @@
 ﻿using A_GroTech_Api.Data;
+using A_GroTech_Api.Dto;
 using A_GroTech_Api.Dto.BodyModels;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
@@ -76,11 +77,13 @@ namespace A_GroTech_Api.Repository
 			return _mapper.Map<ICollection<Image>>(productReviewImages);
 		}
 
-		public ICollection<ProductReview> GetProductReviews()
+		public ICollection<ProductReview> GetProductReviews(PaginationDto paginationDto)
 		{
 			var productReviews = _context.ProductReviews
 				.Include(d => d.ReviewedBy)
 				.Include(d => d.Product)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
 				.ToList();
 			return _mapper.Map<ICollection<ProductReview>>(productReviews);
 		}

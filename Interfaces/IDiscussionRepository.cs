@@ -1,16 +1,17 @@
-﻿using A_GroTech_Api.Dto.BodyModels;
+﻿using A_GroTech_Api.Dto;
+using A_GroTech_Api.Dto.BodyModels;
 using A_GroTech_Api.Models;
 
 namespace A_GroTech_Api.Interfaces
 {
 	public interface IDiscussionRepository
 	{
-		ICollection<Discussion> GetDiscussions();
+		ICollection<Discussion> GetDiscussions(PaginationDto paginationDto);
 		Discussion GetDiscussion(int id);
-		ICollection<Discussion> GetDiscussionsByUserWhoCreated(string id);
+		ICollection<Discussion> GetDiscussionsByUserWhoCreated(string id, PaginationDto paginationDto);
 		ICollection<DiscussionAnswer> GetPinnedAnswer(int id);
 		ICollection<Image> GetDiscussionImage(int id);
-		ICollection<Discussion> SearchDiscussions(string search);
+		ICollection<Discussion> SearchDiscussions(string search, PaginationDto paginationDto);
 		bool AddLike(int id);
 		bool RemoveLike(int id);
 		bool AddSolved(int id);

@@ -34,11 +34,11 @@ namespace A_GroTech_Api.Controllers
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
 		[Authorize(Roles = "Admin")]
-		public IActionResult GetUsers()
+		public IActionResult GetUsers([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var users = _mapper.Map<List<UserDto>>(_userRepository.GetUsers());
+				var users = _mapper.Map<List<UserDto>>(_userRepository.GetUsers(paginationDto));
 
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
@@ -91,11 +91,11 @@ namespace A_GroTech_Api.Controllers
 		[HttpGet("{userId}/discussions")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<DiscussionDto>))]
 		[ProducesResponseType(400, Type = typeof(ApiResponse))]
-		public IActionResult GetDiscussionsByUserWhoCreated(string userId)
+		public IActionResult GetDiscussionsByUserWhoCreated(string userId, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var discussions = _mapper.Map<List<DiscussionDto>>(_discussionRepository.GetDiscussionsByUserWhoCreated(userId));
+				var discussions = _mapper.Map<List<DiscussionDto>>(_discussionRepository.GetDiscussionsByUserWhoCreated(userId, paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (discussions.Any() != true)
@@ -115,11 +115,11 @@ namespace A_GroTech_Api.Controllers
 		[HttpGet("{userId}/notifications")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<NotificationDto>))]
 		[ProducesResponseType(400, Type = typeof(ApiResponse))]
-		public IActionResult GetNotificationsByUser(string userId)
+		public IActionResult GetNotificationsByUser(string userId, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var notifications = _mapper.Map<List<NotificationDto>>(_userRepository.GetNotificationsByUser(userId));
+				var notifications = _mapper.Map<List<NotificationDto>>(_userRepository.GetNotificationsByUser(userId, paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (notifications.Any() != true)
@@ -139,11 +139,11 @@ namespace A_GroTech_Api.Controllers
 		[HttpGet("{userId}/areas")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<AreaDto>))]
 		[ProducesResponseType(400, Type = typeof(ApiResponse))]
-		public IActionResult GetAreasByUser(string userId)
+		public IActionResult GetAreasByUser(string userId, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var areas = _mapper.Map<List<AreaDto>>(_userRepository.GetAreasByUser(userId));
+				var areas = _mapper.Map<List<AreaDto>>(_userRepository.GetAreasByUser(userId, paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (areas.Any() != true)
@@ -163,11 +163,11 @@ namespace A_GroTech_Api.Controllers
 		[HttpGet("{userId}/products")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<ProductDto>))]
 		[ProducesResponseType(400, Type = typeof(ApiResponse))]
-		public IActionResult GetProductsByUser(string userId)
+		public IActionResult GetProductsByUser(string userId, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var products = _mapper.Map<List<ProductDto>>(_userRepository.GetProductsByUser(userId));
+				var products = _mapper.Map<List<ProductDto>>(_userRepository.GetProductsByUser(userId, paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (products.Any() != true)
@@ -187,11 +187,11 @@ namespace A_GroTech_Api.Controllers
 		[HttpGet("{userId}/orders")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<OrderDto>))]
 		[ProducesResponseType(400, Type = typeof(ApiResponse))]
-		public IActionResult GetOrdersByUser(string userId)
+		public IActionResult GetOrdersByUser(string userId, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var orders = _mapper.Map<List<OrderDto>>(_userRepository.GetOrdersByUser(userId));
+				var orders = _mapper.Map<List<OrderDto>>(_userRepository.GetOrdersByUser(userId, paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (orders.Any() != true)

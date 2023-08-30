@@ -38,11 +38,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<DiscussionAnswerDto>))]
-		public IActionResult GetDiscussionAnswers()
+		public IActionResult GetDiscussionAnswers([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var discussionAnswers = _mapper.Map<List<DiscussionAnswerDto>>(_discussionAnswerRepository.GetDiscussionAnswers());
+				var discussionAnswers = _mapper.Map<List<DiscussionAnswerDto>>(_discussionAnswerRepository.GetDiscussionAnswers(paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (discussionAnswers.Any() != true)

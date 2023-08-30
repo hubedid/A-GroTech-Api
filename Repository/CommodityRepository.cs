@@ -1,4 +1,5 @@
 ﻿using A_GroTech_Api.Data;
+using A_GroTech_Api.Dto;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
 using AutoMapper;
@@ -55,9 +56,12 @@ namespace A_GroTech_Api.Repository
 			return Save();
 		}
 
-		public ICollection<Commodity> GetCommodities()
+		public ICollection<Commodity> GetCommodities(PaginationDto paginationDto)
 		{
-			return _context.Commodities.ToList();
+			return _context.Commodities
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
+				.ToList();
 		}
 
 		public Commodity GetCommodity(int id)
@@ -65,11 +69,13 @@ namespace A_GroTech_Api.Repository
 			return _context.Commodities.Find(id);
 		}
 
-		public ICollection<Area> GetCommodityAreas(int commodityId)
+		public ICollection<Area> GetCommodityAreas(int commodityId, PaginationDto paginationDto)
 		{
 			var commdityArea = _context.CommodityAreas
 				.Where(ca => ca.CommodityId == commodityId)
 				.Include(ca => ca.Area)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
 				.Select(ca => ca.Area)
 				.ToList();
 			return _mapper.Map<ICollection<Area>>(commdityArea);

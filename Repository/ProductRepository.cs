@@ -1,4 +1,5 @@
 ﻿using A_GroTech_Api.Data;
+using A_GroTech_Api.Dto;
 using A_GroTech_Api.Dto.BodyModels;
 using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
@@ -67,20 +68,24 @@ namespace A_GroTech_Api.Repository
 			return _mapper.Map<ICollection<Image>>(productImages);
 		}
 
-		public ICollection<ProductReview> GetProductReviews(int productId)
+		public ICollection<ProductReview> GetProductReviews(int productId, PaginationDto paginationDto)
 		{
 			var productReviews = _context.ProductReviews
 				.Where(p => p.Product.Id == productId)
 				.Include(p => p.ReviewedBy)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
 				.ToList();
 			return _mapper.Map<ICollection<ProductReview>>(productReviews);
 		}
 
-		public ICollection<Product> GetProducts()
+		public ICollection<Product> GetProducts(PaginationDto paginationDto)
 		{
 			var products = _context.Products
 				.Include(p => p.Commodity)
 				.Include(p => p.Area)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
 				.ToList();
 			return _mapper.Map<ICollection<Product>>(products);
 		}
@@ -102,12 +107,14 @@ namespace A_GroTech_Api.Repository
 			return saved > 0 ? true : false;
 		}
 
-		public ICollection<Product> SearchProduct(string search)
+		public ICollection<Product> SearchProduct(string search, PaginationDto paginationDto)
 		{
 			var products = _context.Products
 				.Where(p => p.Name.Contains(search) || p.Description.Contains(search) || p.Commodity.Name.Contains(search))
 				.Include(p => p.Commodity)
 				.Include(p => p.Area)
+				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
+				.Take(paginationDto.PageSize)
 				.ToList();
 			return _mapper.Map<ICollection<Product>>(products);
 		}

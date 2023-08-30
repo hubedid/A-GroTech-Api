@@ -38,11 +38,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<ProductReviewDto>))]
-		public IActionResult GetProductReviews()
+		public IActionResult GetProductReviews([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var productReviews = _productReviewRepository.GetProductReviews();
+				var productReviews = _productReviewRepository.GetProductReviews(paginationDto);
 				var productReviewsDto = _mapper.Map<List<ProductReviewDto>>(productReviews);
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));

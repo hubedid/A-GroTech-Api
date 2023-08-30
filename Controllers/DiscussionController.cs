@@ -41,11 +41,11 @@ namespace A_GroTech_Api.Controllers
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<DiscussionDto>))]
 		[ProducesResponseType(400)]
-		public IActionResult GetDiscussions()
+		public IActionResult GetDiscussions([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var discussions = _mapper.Map<List<DiscussionDto>>(_discussionRepository.GetDiscussions());
+				var discussions = _mapper.Map<List<DiscussionDto>>(_discussionRepository.GetDiscussions(paginationDto));
 				if(!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if(discussions.Any() != true)
@@ -87,11 +87,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet("{discussionId}/answers")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<DiscussionAnswerDto>))]
-		public IActionResult GetDiscussionAnswersByDiscussionId(int discussionId)
+		public IActionResult GetDiscussionAnswersByDiscussionId(int discussionId, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var discussionAnswers = _mapper.Map<List<DiscussionAnswerDto>>(_discussionAnswerRepository.GetDiscussionAnswersByDiscussionId(discussionId));
+				var discussionAnswers = _mapper.Map<List<DiscussionAnswerDto>>(_discussionAnswerRepository.GetDiscussionAnswersByDiscussionId(discussionId, paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (discussionAnswers.Any() != true)
@@ -110,11 +110,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet("search")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<DiscussionDto>))]
-		public IActionResult SearchDiscussions([FromQuery] string search)
+		public IActionResult SearchDiscussions([FromQuery] string search, [FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var discussions = _mapper.Map<List<DiscussionDto>>(_discussionRepository.SearchDiscussions(search));
+				var discussions = _mapper.Map<List<DiscussionDto>>(_discussionRepository.SearchDiscussions(search, paginationDto));
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (discussions.Any() != true)

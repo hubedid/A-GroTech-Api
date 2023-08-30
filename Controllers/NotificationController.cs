@@ -35,11 +35,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<NotificationDto>))]
-		public IActionResult GetNotifications()
+		public IActionResult GetNotifications([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var notifications = _mapper.Map<List<NotificationDto>>(_notificationRepository.GetNotifications());
+				var notifications = _mapper.Map<List<NotificationDto>>(_notificationRepository.GetNotifications(paginationDto));
 				if(!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 

@@ -1,14 +1,15 @@
-﻿using A_GroTech_Api.Models;
+﻿using A_GroTech_Api.Dto;
+using A_GroTech_Api.Models;
 
 namespace A_GroTech_Api.Interfaces
 {
 	public interface IUserRepository
 	{
-		ICollection<User> GetUsers();
+		ICollection<User> GetUsers(PaginationDto paginationDto);
 		User GetUser(string id);
-		ICollection<Notification> GetNotificationsByUser(string userId);
-		ICollection<Area> GetAreasByUser(string userId);
-		ICollection<Product> GetProductsByUser(string userId);
-		ICollection<Order> GetOrdersByUser(string userId);
+		ICollection<Notification> GetNotificationsByUser(string userId, PaginationDto paginationDto);
+		ICollection<Area> GetAreasByUser(string userId, PaginationDto paginationDto);
+		ICollection<Product> GetProductsByUser(string userId, PaginationDto paginationDto);
+		ICollection<Order> GetOrdersByUser(string userId, PaginationDto paginationDto);
 	}
 }

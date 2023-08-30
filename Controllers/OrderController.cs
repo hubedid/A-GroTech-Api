@@ -37,11 +37,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<OrderDto>))]
-		public IActionResult GetOrders()
+		public IActionResult GetOrders([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var orders = _orderRepository.GetOrders();
+				var orders = _orderRepository.GetOrders(paginationDto);
 				var ordersDto = _mapper.Map<List<OrderDto>>(orders);
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));

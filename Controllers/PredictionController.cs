@@ -37,11 +37,11 @@ namespace A_GroTech_Api.Controllers
 
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<PredictionDto>))]
-		public IActionResult GetPredictions()
+		public IActionResult GetPredictions([FromQuery] PaginationDto paginationDto)
 		{
 			try
 			{
-				var predictions = _mapper.Map<List<PredictionDto>>(_predictionRepository.GetPredictions());
+				var predictions = _mapper.Map<List<PredictionDto>>(_predictionRepository.GetPredictions(paginationDto));
 			
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
