@@ -18,20 +18,6 @@ namespace A_GroTech_Api.Controllers
 		private readonly ResponseHelper _responseHelper;
 		private readonly IAreaRepository _areaRepository;
 		private readonly IMapper _mapper;
-		const int maxPageSize = 50;
-		public int PageNumber { get; set; } = 1;
-		private int _pageSize = 10;
-		public int PageSize
-		{
-			get
-			{
-				return _pageSize;
-			}
-			set
-			{
-				_pageSize = (value > maxPageSize) ? maxPageSize : value;
-			}
-		}
 
 		public AreaController(ResponseHelper responseHelper, IAreaRepository areaRepository, IMapper mapper)
 		{
