@@ -46,9 +46,8 @@ namespace A_GroTech_Api.Controllers
 
 				var result = await _userManager.CreateAsync(userAdd, registerModel.Password);
 				if (result.Succeeded)
+					await _userManager.AddToRoleAsync(userAdd, "User");
 					return Ok(_responseHelper.Success("User created successfully"));
-
-				return BadRequest(_responseHelper.Error(result.Errors.FirstOrDefault()?.Description.ToString()));
 			}
 			catch (SqlException ex)
 			{
