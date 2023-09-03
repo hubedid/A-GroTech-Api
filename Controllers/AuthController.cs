@@ -83,7 +83,7 @@ namespace A_GroTech_Api.Controllers
 				var roles = await _userManager.GetRolesAsync(user);
 				var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 				var tokenKey = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
-				var tokenExpires = DateTime.Now.AddMinutes(30);
+				var tokenExpires = DateTime.Now.AddDays(30);
 				var tokenDescriptor = new SecurityTokenDescriptor
 				{
 					Audience = _configuration["Jwt:Audience"],
