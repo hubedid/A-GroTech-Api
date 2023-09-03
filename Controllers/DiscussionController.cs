@@ -49,7 +49,7 @@ namespace A_GroTech_Api.Controllers
 				if(!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if(discussions.Any() != true)
-					return NotFound(_responseHelper.Error("No discussions found", 404));
+					return Ok(_responseHelper.Success("No discussions found"));
 				return Ok(discussions);
 			}catch (SqlException ex)
 			{
@@ -72,7 +72,7 @@ namespace A_GroTech_Api.Controllers
 				if(!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if(discussion == null)
-					return Ok(_responseHelper.Success("No discussion found"));
+					return NotFound(_responseHelper.Error("No discussion found"));
 				return Ok(_responseHelper.Success("", discussion));
 			}
 			catch (SqlException ex) 
