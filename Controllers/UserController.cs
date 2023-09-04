@@ -4,6 +4,7 @@ using A_GroTech_Api.Interfaces;
 using A_GroTech_Api.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -18,18 +19,21 @@ namespace A_GroTech_Api.Controllers
 		private readonly IUserRepository _userRepository;
 		private readonly IMapper _mapper;
 		private readonly IDiscussionRepository _discussionRepository;
+		private readonly UserManager<User> _userManager;
 
 		public UserController(
 			ResponseHelper responseHelper, 
 			IUserRepository userRepository, 
 			IMapper mapper,
-			IDiscussionRepository discussionRepository
+			IDiscussionRepository discussionRepository, 
+			UserManager<User> userManager
 			)
 		{
 			_responseHelper = responseHelper;
 			_userRepository = userRepository;
 			_mapper = mapper;
 			_discussionRepository = discussionRepository;
+			_userManager = userManager;
 		}
 		[HttpGet]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
@@ -77,6 +81,31 @@ namespace A_GroTech_Api.Controllers
 
 				return Ok(_responseHelper.Success("", user));
 
+			}
+			catch (SqlException ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong", 500, ex.Message));
+			}
+		}
+
+		[HttpDelete("{userId}")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		[Authorize(Roles = "Admin, User")]
+		public IActionResult DeleteUser(string userId)
+		{
+			try
+			{
+				var user = _userRepository.GetUser(userId);
+				if (user == null)
+					return NotFound(_responseHelper.Error("User does not exist", 404));
+				_userManager.DeleteAsync(user);
+				return Ok(_responseHelper.Success("User deleted successfuly"));
 			}
 			catch (SqlException ex)
 			{
