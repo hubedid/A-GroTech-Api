@@ -11,5 +11,8 @@ namespace A_GroTech_Api.Interfaces
 		ICollection<Area> GetAreasByUser(string userId, PaginationDto paginationDto);
 		ICollection<Product> GetProductsByUser(string userId, PaginationDto paginationDto);
 		ICollection<Order> GetOrdersByUser(string userId, PaginationDto paginationDto);
+		bool DeleteDiscussionByUser(string userId);
+		bool Save();
+
 	}
 }

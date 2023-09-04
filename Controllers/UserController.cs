@@ -141,6 +141,31 @@ namespace A_GroTech_Api.Controllers
 			}
 		}
 
+		[HttpDelete("{userId}/discussions")]
+		[ProducesResponseType(204)]
+		[ProducesResponseType(400)]
+		[ProducesResponseType(404)]
+		[Authorize(Roles = "Admin, User")]
+		public IActionResult DeleteDiscussionsByUserWhoCreated(string userId, [FromQuery]PaginationDto paginationDto)
+		{
+			try
+			{
+				var discussions = _discussionRepository.GetDiscussionsByUserWhoCreated(userId, paginationDto);
+				if (discussions.Any() != true)
+					return NotFound(_responseHelper.Error("No discussions found", 404));
+				_userRepository.DeleteDiscussionByUser(userId);
+				return Ok(_responseHelper.Success($"All {userId} Discussions deleted successfuly"));
+			}
+			catch (SqlException ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, _responseHelper.Error("Something went wrong", 500, ex.Message));
+			}
+		}
+
 		[HttpGet("{userId}/notifications")]
 		[ProducesResponseType(200, Type = typeof(IEnumerable<NotificationDto>))]
 		[ProducesResponseType(400, Type = typeof(ApiResponse))]

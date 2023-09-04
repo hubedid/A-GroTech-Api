@@ -21,6 +21,51 @@ namespace A_GroTech_Api.Repository
 			_mapper = mapper;
 		}
 
+		public bool DeleteDiscussionByUser(string userId)
+		{
+			var discussions = _context.Discussions.Where(d => d.User.Id == userId).ToList();
+			if (discussions != null)
+			{
+				foreach (var item in discussions)
+				{
+					var discussionImage = _context.DiscussionImages.Where(di => di.Discussion.Id == item.Id).ToList();
+					if (discussionImage != null)
+					{
+						foreach (var image in discussionImage)
+						{
+							_context.Remove(image);
+						}
+					}
+					var discussionAnswer = _context.DiscussionAnswers.Where(da => da.Discussion.Id == item.Id).ToList();
+					if (discussionAnswer != null)
+					{
+						foreach (var answer in discussionAnswer)
+						{
+							var answerImage = _context.DiscussionAnswerImages.Where(dai => dai.DiscussionAnswer.Id == answer.Id).ToList();
+							if (answerImage != null)
+							{
+								foreach (var image in answerImage)
+								{
+									_context.Remove(image);
+								}
+							}
+							var pinnedAnswer = _context.PinnedDiscussionAnswers.Where(pda => pda.DiscussionAnswer.Id == answer.Id).ToList();
+							if (pinnedAnswer != null)
+							{
+								foreach (var pinned in pinnedAnswer)
+								{
+									_context.Remove(pinned);
+								}
+							}
+							_context.Remove(answer);
+						}
+					}
+					_context.Remove(item);
+				}
+			}
+			return Save();
+		}
+
 		public ICollection<Area> GetAreasByUser(string userId, PaginationDto paginationDto)
 		{
 			var areas = _context.UserAreas
@@ -78,6 +123,12 @@ namespace A_GroTech_Api.Repository
 				.Skip((paginationDto.PageNumber - 1) * paginationDto.PageSize)
 				.Take(paginationDto.PageSize)
 				.ToList();
+		}
+
+		public bool Save()
+		{
+			var saved = _context.SaveChanges();
+			return saved >= 0 ? true : false;
 		}
 	}
 }
