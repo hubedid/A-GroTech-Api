@@ -36,6 +36,15 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowAgilMilf", builder =>
+	{
+		builder.WithOrigins("https://agrotech.agilf.dev")
+			.AllowAnyHeader()
+			.AllowAnyMethod();
+	});
+});
 builder.Services.AddSwaggerGen(c =>
 {
 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "A-GroTech Hoaksss", Version = "v1" });
@@ -155,6 +164,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+app.UseCors("AllowAgilMilf");
 
 app.UseAuthentication();
 
