@@ -1,6 +1,7 @@
 ﻿using A_GroTech_Api.Dto;
 using A_GroTech_Api.Helpers;
 using A_GroTech_Api.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -11,6 +12,7 @@ using System.Text;
 
 namespace A_GroTech_Api.Controllers
 {
+	[EnableCors("AllowAgilMilf")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class AuthController : Controller
