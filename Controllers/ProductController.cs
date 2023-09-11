@@ -50,7 +50,7 @@ namespace A_GroTech_Api.Controllers
 				if (!ModelState.IsValid)
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if (products.Any() != true)
-					return NotFound(_responseHelper.Error("No products found", 404));
+					return Ok(_responseHelper.Success("No products found"));
 
 				return Ok(_responseHelper.Success("", products));
 			}

@@ -50,7 +50,7 @@ namespace A_GroTech_Api.Controllers
 					return BadRequest(_responseHelper.Error(ModelState.Select(ex => ex.Value?.Errors).FirstOrDefault()?.Select(e => e.ErrorMessage).FirstOrDefault()?.ToString()));
 				if(discussions.Any() != true)
 					return Ok(_responseHelper.Success("No discussions found"));
-				return Ok(discussions);
+				return Ok(_responseHelper.Success("",discussions));
 			}catch (SqlException ex)
 			{
 				return StatusCode(500, _responseHelper.Error("Something went wrong in sql execution", 500, ex.Message));
