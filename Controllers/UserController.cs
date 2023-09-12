@@ -97,14 +97,14 @@ namespace A_GroTech_Api.Controllers
 		[ProducesResponseType(400)]
 		[ProducesResponseType(404)]
 		[Authorize(Roles = "Admin, User")]
-		public IActionResult DeleteUser(string userId)
+		public async Task<IActionResult> DeleteUser(string userId)
 		{
 			try
 			{
 				var user = _userRepository.GetUser(userId);
 				if (user == null)
 					return NotFound(_responseHelper.Error("User does not exist", 404));
-				_userManager.DeleteAsync(user);
+				await _userManager.DeleteAsync(user);
 				return Ok(_responseHelper.Success("User deleted successfuly"));
 			}
 			catch (SqlException ex)
